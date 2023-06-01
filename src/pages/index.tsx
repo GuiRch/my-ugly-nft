@@ -12,8 +12,6 @@ const Home: NextPage = () => {
 
   const styles = {
     pageBlock: {
-      // height: '100%',
-      // widht: '100%',
       height: "100vh",
       backgroundImage: 'url("./images/background.png")',
       backgroundSize: "cover",

@@ -102,22 +102,24 @@ const DrawingComponent = () => {
     },
     tools: {
       display: "flex",
-      flex: 1,
+      justifyContent: "space-around",
+    },
+    toolIconBox: {
+      display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      borderStyle: "solid",
       padding: 5,
-      boxShadow: "2px 2px",
+      borderStyle: "solid",
+      borderRadius: 5,
+      cursor: "pointer",
+      transition: "box-shadow 0.2s ease-in-out",
     },
     iconStyle: {
       fontSize: 20,
       height: 25,
       width: 25,
-      margin: 5
+      margin: 5,
     },
-    // selectedTool: {
-    //   color: 'green'
-    // }
   };
 
   // Drawing functions
@@ -230,7 +232,6 @@ const DrawingComponent = () => {
     const circleStyle = {
       ...styles.colorCircle,
       backgroundColor: color,
-      // boxShadow: isSelected ? `0 0 0 2px white, 0 0 0 4px ${color}` : "2px 2px",
       boxShadow: isSelected
         ? `inset 2px 2px 2px ${darken(
             0.3,
@@ -335,56 +336,43 @@ const DrawingComponent = () => {
 
   const renderToolSelector = () => {
     return (
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
+      <div style={styles.tools}>
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 5,
-            borderStyle: "solid",
-            borderRadius: 5,
-            cursor: "pointer",
-            // boxShadow: "2px 2px",
+            ...styles.toolIconBox,
             backgroundColor: selectedTool == "pen" ? "#F5EDB5" : "#F2ECDC",
-            boxShadow: selectedTool == "pen" ? `inset 3px 3px 2px ${darken(0.4, '#F5EDB5')}, inset -2px -2px 4px ${lighten(0.2, '#F5EDB5')}` : "2px 2px",
-            transition: "box-shadow 0.2s ease-in-out",
+            boxShadow:
+              selectedTool == "pen"
+                ? `inset 3px 3px 2px ${darken(
+                    0.4,
+                    "#F5EDB5"
+                  )}, inset -2px -2px 4px ${lighten(0.2, "#F5EDB5")}`
+                : "2px 2px",
           }}
           onClick={() => setSelectedTool("pen")}
         >
           <FaPencilAlt
             className={selectedTool === "pen" ? "selected" : ""}
-            style={
-              selectedTool === "pen"
-                ? { ...styles.iconStyle, ...styles.selectedTool }
-                : styles.iconStyle
-            }
+            style={styles.iconStyle}
           />
         </div>
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 5,
-            borderStyle: "solid",
-            borderRadius: 5,
-            boxShadow: "2px 2px",
-            cursor: "pointer",
+            ...styles.toolIconBox,
             backgroundColor: selectedTool == "eraser" ? "#F5EDB5" : "#F2ECDC",
-            boxShadow: selectedTool == "eraser" ? `inset 3px 3px 2px ${darken(0.4, '#F5EDB5')}, inset -2px -2px 4px ${lighten(0.2, '#F5EDB5')}` : "2px 2px",
-            transition: "box-shadow 0.2s ease-in-out",
+            boxShadow:
+              selectedTool == "eraser"
+                ? `inset 3px 3px 2px ${darken(
+                    0.4,
+                    "#F5EDB5"
+                  )}, inset -2px -2px 4px ${lighten(0.2, "#F5EDB5")}`
+                : "2px 2px",
           }}
           onClick={() => setSelectedTool("eraser")}
         >
           <FaEraser
             className={selectedTool === "eraser" ? "selected" : ""}
-            style={
-              selectedTool === "eraser"
-                ? { ...styles.iconStyle, ...styles.selectedTool }
-                : styles.iconStyle
-            }
-            
+            style={styles.iconStyle}
           />
         </div>
       </div>
