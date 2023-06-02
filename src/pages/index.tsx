@@ -1,4 +1,6 @@
 import styles from "./index.module.css";
+import { useRef, useImperativeHandle, forwardRef } from "react";
+
 import { type NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
@@ -9,6 +11,16 @@ import DrawingComponent from "~/components/DrawingComponent.tsx";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+
+	const drawingComponentRef = useRef(null);
+
+  const handleClear = () => {
+    drawingComponentRef.current.handleClear();
+  };
+
+	const handleDownload = () => {
+    drawingComponentRef.current.handleDownload();
+  };
 
   const styles = {
     pageBlock: {
@@ -33,11 +45,19 @@ const Home: NextPage = () => {
     desktopIconContainer: {
       display: "flex",
       flexDirection: "column",
+      rowGap: 40,
+      fontFamily: "Inter",
+      fontSize: 15,
+      fontWeight: 500,
+    },
+    desktopIconBox: {
+      display: "flex",
+      flexDirection: "column",
       alignItems: "center",
     },
     desktopIcons: {
-      height: 50,
-      width: 50,
+      height: 60,
+      width: 60,
       cursor: "pointer",
     },
   };
@@ -48,59 +68,52 @@ const Home: NextPage = () => {
         <title>My Ugly NFT</title>
         <meta name="description" content="Create your own NFT" />
         <link rel="icon" href="/favicon.ico" />
-				{/* <link href="https://fonts.googleapis.com/css2?family=Freckle+Face&family=Rubik+Iso&display=swap" rel="stylesheet" /> */}
-				<link rel="preconnect" href="https://fonts.googleapis.com" />
-				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-				<link href="https://fonts.googleapis.com/css2?family=Freckle+Face&family=Inter:wght@400;500;700&family=Rubik+Iso&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Freckle+Face&family=Inter:wght@400;500;700&family=Rubik+Iso&display=swap"
+          rel="stylesheet"
+        />
       </Head>
       <main style={styles.pageBlock}>
-          <Header></Header>
-          <div
-            style={{
-              display: "flex",
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div style={styles.drawingArea}>
-              <DrawingComponent />
-            </div>
+        <Header></Header>
+        <div
+          style={{
+            display: "flex",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div style={styles.drawingArea}>
+            <DrawingComponent ref={drawingComponentRef} />
+          </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                rowGap: 40,
-								fontFamily: 'Inter',
-								fontSize: 15,
-								fontWeight: 500
-              }}
-            >
-              <div style={styles.desktopIconContainer}>
-                <img
-                  src="./images/disk-card.png"
-                  style={styles.desktopIcons}
-                ></img>
-                <span>Download</span>
-              </div>
-              <div style={styles.desktopIconContainer}>
-                <img
-                  src="./images/trash.png"
-                  style={styles.desktopIcons}
-                ></img>
-                <span>Delete</span>
-              </div>
-              <div style={styles.desktopIconContainer}>
-                <img
-                  src="./images/retro-pc.png"
-                  style={styles.desktopIcons}
-                ></img>
-                <span>Compute</span>
-              </div>
+          <div
+            style={styles.desktopIconContainer}
+          >
+            <div style={styles.desktopIconBox}>
+              <img
+                src="./images/disk-card.png"
+                style={styles.desktopIcons}
+								onClick={handleDownload}
+              ></img>
+              <span>Download</span>
+            </div>
+            <div style={styles.desktopIconBox}>
+              <img src="./images/trash.png" style={styles.desktopIcons} onClick={handleClear}></img>
+              <span>Delete</span>
+            </div>
+            <div style={styles.desktopIconBox}>
+              <img
+                src="./images/retro-pc.png"
+                style={styles.desktopIcons}
+              ></img>
+              <span>Compute</span>
             </div>
           </div>
-          {/* <div className={styles.showcaseContainer}>
+        </div>
+        {/* <div className={styles.showcaseContainer}>
 						<p className={styles.showcaseText}>
 						{hello.data ? hello.data.greeting : "Loading tRPC query..."}
 						</p>
