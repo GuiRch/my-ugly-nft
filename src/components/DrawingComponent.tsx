@@ -1,12 +1,21 @@
 // React
-import React, { useCallback, useEffect, useRef, useImperativeHandle, forwardRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  useState,
+} from "react";
 // Utils
 import { darken, lighten } from "polished";
 // Icons
 import { FaEraser, FaPencilAlt } from "react-icons/fa";
-import { ImCross, ImMinus } from "react-icons/im";
 // Components
 import DrawingTools from "~/components/DrawingTools.tsx";
+import DrawingPreview from "~/components/DrawingPreview.tsx";
+import ColorCard from "~/components/ColorCard.tsx";
+import DrawingWindowHeader from "~/components/DrawingWindowHeader.tsx";
 
 const colors = [
   "#C780E8",
@@ -28,6 +37,7 @@ const DrawingComponent = forwardRef((props, ref) => {
   const [selectedColor, setSelectedColor] = useState(colors[0]);
   const [brushSize, setBrushSize] = useState(5);
   const [selectedTool, setSelectedTool] = useState("pen");
+  const [showDrawingPreview, setShowDrawingPreview] = useState(false);
   const [mouseDown, setMouseDown] = useState(false);
   const [lastPosition, setPosition] = useState({
     x: 0,
@@ -47,6 +57,14 @@ const DrawingComponent = forwardRef((props, ref) => {
     setSelectedTool(tool);
   };
 
+  const handleDrawingPreview = () => {
+    setShowDrawingPreview(true);
+  };
+
+  const handleCloseWindow = () => {
+    setShowDrawingPreview(false);
+  };
+
   // use effect
   useEffect(() => {
     if (canvasRef.current) {
@@ -63,31 +81,7 @@ const DrawingComponent = forwardRef((props, ref) => {
       borderRadius: 5,
       boxShadow: "10px 10px",
       backgroundColor: "#E2FFE5",
-    },
-    drawingWindowHeader: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      borderStyle: "solid",
-      borderWidth: "0px 0px 5px 0px",
-      background: "#B8DCB8",
-    },
-    drawingWindowHeaderTitle: {
-      margin: 3,
-      marginLeft: 10,
-      fontFamily: "Inter",
-      fontWeight: 700,
-      fontSize: 15,
-    },
-    drawingWindowHeaderIconBox: {
-      display: "flex",
-      alignItems: "center",
-      marginRight: 10,
-    },
-    drawingWindowHeaderIcon: {
-      marginTop: 6,
-      marginRight: 5,
-      cursor: "pointer",
+      filter: "blur(4px)",
     },
     drawingWindowContent: {
       display: "flex",
@@ -95,6 +89,7 @@ const DrawingComponent = forwardRef((props, ref) => {
       gap: 10,
       background: "#F2ECDC",
     },
+    canvas: { border: "3px solid #000", borderRadius: 5 },
   };
 
   // Drawing functions
@@ -164,51 +159,48 @@ const DrawingComponent = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     handleClear: clear,
-    handleDownload: download
+    handleDownload: download,
   }));
 
-  const renderWindowHeader = () => {
-    return (
-      <div style={styles.drawingWindowHeader}>
-        <span style={styles.drawingWindowHeaderTitle}>Untitled.eth</span>
-        <div style={styles.drawingWindowHeaderIconBox}>
-          <ImMinus
-            style={styles.drawingWindowHeaderIcon}
-          ></ImMinus>
-          <ImCross style={{ cursor: "pointer" }}></ImCross>
+  return (
+    <>
+      <div
+        style={{
+          ...styles.componentBlock,
+          filter: showDrawingPreview ? "blur(4px)" : null,
+        }}
+      >
+        <DrawingWindowHeader></DrawingWindowHeader>
+        <div style={styles.drawingWindowContent}>
+          <canvas
+            style={styles.canvas}
+            width={500}
+            height={500}
+            ref={canvasRef}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onMouseLeave={onMouseUp}
+            onMouseMove={onMouseMove}
+          />
+          <br />
+          <DrawingTools
+            selectedColor={selectedColor}
+            onColorChange={handleColorChange}
+            brushSize={brushSize}
+            onBrushSizeChange={handleBrushSizeChange}
+            onToolChange={handleToolChange}
+            selectedTool={selectedTool}
+            onDrawingPreview={handleDrawingPreview}
+          ></DrawingTools>
         </div>
       </div>
-    );
-  };
-
-  return (
-    <div style={styles.componentBlock}>
-      {renderWindowHeader()}
-      <div style={styles.drawingWindowContent}>
-        <canvas
-          style={{
-            border: "3px solid #000",
-            borderRadius: 5,
-          }}
-          width={500}
-          height={500}
-          ref={canvasRef}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-          onMouseLeave={onMouseUp}
-          onMouseMove={onMouseMove}
-        />
-        <br />
-        <DrawingTools
-          selectedColor={selectedColor}
-          onColorChange={handleColorChange}
-          brushSize={brushSize}
-          onBrushSizeChange={handleBrushSizeChange}
-          onToolChange={handleToolChange}
-          selectedTool={selectedTool}
-        ></DrawingTools>
-      </div>
-    </div>
+      {showDrawingPreview ? (
+        <DrawingPreview
+          imageURL={canvasRef.current.toDataURL("image/png")}
+          onCloseWindow={handleCloseWindow}
+        ></DrawingPreview>
+      ) : null}
+    </>
   );
 });
 

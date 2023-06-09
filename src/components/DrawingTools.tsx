@@ -23,7 +23,8 @@ const DrawingTools = ({
     brushSize,
     onBrushSizeChange,
     selectedTool,
-    onToolChange
+    onToolChange,
+    onDrawingPreview
 }) => {
 
   const styles = {
@@ -84,26 +85,6 @@ const DrawingTools = ({
       width: 25,
       margin: 5,
     },
-  };
-
-  // Utils
-  const clear = () => {
-    ctx.current.clearRect(
-      0,
-      0,
-      ctx.current.canvas.width,
-      ctx.current.canvas.height
-    );
-  };
-
-  const download = async () => {
-    const image = canvasRef.current.toDataURL("image/png");
-    const blob = await (await fetch(image)).blob();
-    const blobURL = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = blobURL;
-    link.download = "image.png";
-    link.click();
   };
 
   // ToolBox components
@@ -302,19 +283,26 @@ const DrawingTools = ({
       {renderBrushSizeSelector()}
       {renderColorSelector()}
       {renderToolSelector()}
-      <button
+      <div
         style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           borderRadius: 5,
-          borderWidth: "2px",
+          borderWidth: "3px",
+          borderStyle: 'solid',
           backgroundColor: "#B8DCB8",
           boxShadow: "3px 3px",
           padding: 10,
           fontFamily: "Inter",
           fontWeight: 700,
+          fontSize: 15,
+          cursor: 'pointer'
         }}
+        onClick={() => onDrawingPreview()}
       >
         Create my NFT
-      </button>
+      </div>
     </div>
   );
 };
