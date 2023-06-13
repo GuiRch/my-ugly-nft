@@ -1,8 +1,16 @@
 // React
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const ColorCard = ({ color, onColorChange }) => {
-  // const isSelected = color === backgroundColor;
+  const [inputColor, setInputColor] = useState("transparent");
+
+  const handleInputChange = (event) => {
+    setInputColor(event.target.value);
+  };
+
+  useEffect(() => {
+    onColorChange(inputColor)
+  }, [inputColor])
 
   const styles = {
     customColorContainer: {
@@ -14,8 +22,8 @@ const ColorCard = ({ color, onColorChange }) => {
       borderWidth: "2px",
       borderRadius: 5,
       boxShadow: "3px 3px",
-      width: 70,
-      height: 80,
+      width: 80,
+      height: 95,
       padding: 3,
       cursor: "pointer",
       transition: "box-shadow 0.2s ease-in-out",
@@ -23,26 +31,44 @@ const ColorCard = ({ color, onColorChange }) => {
     customColor: {
       display: "flex",
       borderStyle: "solid",
-      height: 50,
-      width: 50,
+      height: 60,
+      width: 60,
       borderRadius: 5,
       borderWidth: "2px",
       marginBottom: 2,
-      backgroundColor: color,
       boxShadow: "2px 2px",
+    },
+    input: {
+      fontSize: 12,
+      // appearance: 'none',
+      fontWeight: "bold",
+      width: 60,
+      textAlign: "center",
     },
   };
 
   return (
     <div
       style={styles.customColorContainer}
-      onClick={() => onColorChange(color)}
+      onClick={() => setInputColor(color)}
     >
-      <div
-        style={styles.customColor}
-      ></div>
-      {/* <input type='text' /> */}
-      <span style={{ fontSize: 10, fontWeight: "bold" }}>{color}</span>
+      {color ? (
+        <>
+          <div style={{...styles.customColor, backgroundColor: color}}></div>
+          <span style={{ fontSize: 12, fontWeight: "bold" }}>{color}</span>
+        </>
+      ) : (
+        <>
+          <div style={{...styles.customColor, backgroundColor: inputColor}}></div>
+          <input
+            type="text"
+            // placeholder="#"
+            style={styles.input}
+            value={inputColor}
+            onChange={handleInputChange}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -18,15 +18,15 @@ const colors = [
 ];
 
 const DrawingTools = ({
-    selectedColor, 
-    onColorChange,
-    brushSize,
-    onBrushSizeChange,
-    selectedTool,
-    onToolChange,
-    onDrawingPreview
+  selectedColor,
+  onColorChange,
+  brushSize,
+  onBrushSizeChange,
+  selectedTool,
+  onToolChange,
+  onDrawingPreview,
 }) => {
-
+  
   const styles = {
     toolsBlock: {
       display: "flex",
@@ -85,6 +85,21 @@ const DrawingTools = ({
       width: 25,
       margin: 5,
     },
+    button: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 5,
+      borderWidth: "3px",
+      borderStyle: "solid",
+      backgroundColor: "#B8DCB8",
+      boxShadow: "3px 3px",
+      padding: 10,
+      fontFamily: "Inter",
+      fontWeight: 700,
+      fontSize: 15,
+      cursor: "pointer",
+    },
   };
 
   // ToolBox components
@@ -140,7 +155,11 @@ const DrawingTools = ({
       transition: "box-shadow 0.2s ease-in-out",
     };
     return (
-      <div style={circleStyle} onClick={() => onColorChange(color)} key={index}></div>
+      <div
+        style={circleStyle}
+        onClick={() => onColorChange(color)}
+        key={index}
+      ></div>
     );
   };
 
@@ -284,21 +303,7 @@ const DrawingTools = ({
       {renderColorSelector()}
       {renderToolSelector()}
       <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: 5,
-          borderWidth: "3px",
-          borderStyle: 'solid',
-          backgroundColor: "#B8DCB8",
-          boxShadow: "3px 3px",
-          padding: 10,
-          fontFamily: "Inter",
-          fontWeight: 700,
-          fontSize: 15,
-          cursor: 'pointer'
-        }}
+        style={styles.button}
         onClick={() => onDrawingPreview()}
       >
         Create my NFT
